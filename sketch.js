@@ -15,16 +15,20 @@ function draw() {
   speed=Number(document.getElementById('s').value);
 
   background(0);
-  stroke(0,255,0);
-  fill(0);
-
+  noStroke();
   rotateX(PI/3);//get top down view of terrain
 
   for(let x=-width/1.7,xoff=0;x<=width/1.7;x+=w,xoff+=scale){
     beginShape(TRIANGLE_STRIP);
     for(let y=-height/2,yoff=frameCount*-speed;y<=height/1.8;y+=w,yoff+=scale){//yoff changes each time draw is passed through to give effect of moving
-      vertex(x,y,(noise(xoff,yoff)-.5)*h);//use x/yoff as perlin mapping to get z, and x/y as drawing coords
-      vertex(x+w,y,(noise(xoff+.2,yoff)-.5)*h);
+      let noiseXY=noise(xoff,yoff);
+      let noiseX1Y=noise(xoff+scale,yoff);
+      let noiseYX=noise(yoff,xoff);
+
+      //stroke(255*noiseX1Y,255*noiseXY,255*noiseYX);
+      fill(255*noiseX1Y,255*noiseXY,255*noiseYX);
+      vertex(x,y,(noiseXY-.5)*h);//use x/yoff as perlin mapping to get z, and x/y as drawing coords
+      vertex(x+w,y,(noiseX1Y-.5)*h);
     }
     endShape();
   }
